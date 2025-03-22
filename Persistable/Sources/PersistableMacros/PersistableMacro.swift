@@ -33,7 +33,10 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
         conformingTo protocols: [SwiftSyntax.TypeSyntax],
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.ExtensionDeclSyntax] {
-        let properties = try validateAndExtractProperties(from: declaration)
+        let persistableContext = try generatePersistableContext(
+            from: declaration,
+            conformingTo: [.persistable]
+        )
         
         return []
     }
@@ -43,20 +46,12 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
         providingPeersOf declaration: some SwiftSyntax.DeclSyntaxProtocol,
         in context: some SwiftSyntaxMacros.MacroExpansionContext
     ) throws -> [SwiftSyntax.DeclSyntax] {
-        let properties = try validateAndExtractProperties(from: declaration)
+        let persistableContext = try generatePersistableContext(
+            from: declaration,
+            conformingTo: [.realmObject, .localDAO]
+        )
         
         return []
-    }
-    
-    // MARK: - Helper
-    private static func validateAndExtractProperties(
-        from declaration: some DeclSyntaxProtocol
-    ) throws -> [Property] {
-        guard let structDecl = declaration.as(StructDeclSyntax.self) else {
-            throw PersistableError.onlyApplicableToStruct
-        }
-        
-        return try extractProperties(from: structDecl)
     }
     
 }
