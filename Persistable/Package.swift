@@ -14,12 +14,12 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "PersistableMacro",
-            targets: ["PersistableMacro"]
+            name: "Persistable",
+            targets: ["Persistable"]
         ),
         .executable(
-            name: "PersistableMacroClient",
-            targets: ["PersistableMacroClient"]
+            name: "PersistableClient",
+            targets: ["PersistableClient"]
         ),
     ],
     dependencies: [
@@ -28,27 +28,27 @@ let package = Package(
     ],
     targets: [
         .macro(
-            name: "PersistableMacroMacros",
+            name: "PersistableMacros",
             dependencies: [
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
         .target(
-            name: "PersistableMacro",
+            name: "Persistable",
             dependencies: [
-                "PersistableMacroMacros",
+                "PersistableMacros",
                 .product(name: "RealmSwift", package: "realm-swift")
             ]
         ),
         .executableTarget(
-            name: "PersistableMacroClient",
-            dependencies: ["PersistableMacro"]
+            name: "PersistableClient",
+            dependencies: ["Persistable"]
         ),
         .testTarget(
-            name: "PersistableMacroTests",
+            name: "PersistableTests",
             dependencies: [
-                "PersistableMacroMacros",
+                "PersistableMacros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
             ]
         )
