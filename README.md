@@ -1,17 +1,4 @@
 # 📦 Swift Persistable Macro
-
-A Swift Macro that simplifies the creation of persistent data models with Realm.
-
-## Overview 🔍
-
-The `@Persistable` macro automates the creation of Realm database objects from your Swift models. By simply applying the `@Persistable` attribute to your struct, the macro will generate:
-
-1. A corresponding `DAO` (Data Access Object) class that conforms to Realm's `Object` protocol
-2. An extension to your struct that conforms to the `Persistable` protocol
-3. Appropriate initializers and property mappings between your model and its DAO
-
-
-# 📦 Swift Persistable Macro
 A Swift Macro that simplifies the creation of persistent data models with Realm.
 ## Overview 🔍
 The `@Persistable` macro automates the creation of Realm database objects from your Swift models. By simply applying the `@Persistable` attribute to your struct, the macro will generate:
