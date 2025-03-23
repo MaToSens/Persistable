@@ -7,20 +7,26 @@
 
 import SwiftSyntax
 
+enum SourceType {
+    case dao
+    case entity
+}
+
 func generateInitializerMemberBlock(
     persistableContext: PersistableContext,
     sourceParamName: TokenSyntax,
+    sourceType: SourceType = .dao,
     includeSuperInit: Bool = false
 ) -> [MemberBlockItemSyntax] {
     let signature = generateFunctionSignature(
         sourceParamName: sourceParamName,
-        sourceType: persistableContext.tokens.daoType
+        sourceType: sourceType == .entity ? persistableContext.tokens.entityType : persistableContext.tokens.daoType
     )
     
     let body = generateCodeBlockSyntax(
         properties: persistableContext.properties,
         sourceParamName: sourceParamName,
-        includeSuperInit: includeSuperInit
+        sourceType: sourceType
     )
     
     let initDecl = InitializerDeclSyntax(
@@ -64,11 +70,11 @@ private func generateFunctionParameter(
 private func generateCodeBlockSyntax(
     properties: [Property],
     sourceParamName: TokenSyntax,
-    includeSuperInit: Bool
+    sourceType: SourceType
 ) -> CodeBlockSyntax {
     CodeBlockSyntax(
         statements: CodeBlockItemListSyntax {
-            if includeSuperInit { CodeBlockItemSyntax.superInit }
+            if sourceType == .entity { CodeBlockItemSyntax.superInit }
             
             properties.map {
                 CodeBlockItemSyntax.propertyAssignment(propertyName: $0.name, fromSource: sourceParamName)

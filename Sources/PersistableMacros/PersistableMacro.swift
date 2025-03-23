@@ -69,7 +69,7 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
         let initializerMemberBlock = generateInitializerMemberBlock(
             persistableContext: persistableContext,
             sourceParamName: .model,
-            includeSuperInit: true
+            sourceType: .entity
         )
         
         let memberBlockItems: [MemberBlockItemSyntax] = variablesMemberBlock + overrideInitializerMemberBlock + initializerMemberBlock
