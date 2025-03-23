@@ -68,26 +68,11 @@ private func generateCodeBlockSyntax(
 ) -> CodeBlockSyntax {
     CodeBlockSyntax(
         statements: CodeBlockItemListSyntax {
-            if includeSuperInit { CodeBlockItemSyntax(item: .superInit) }
+            if includeSuperInit { CodeBlockItemSyntax.superInit }
             
             properties.map {
-                CodeBlockItemSyntax(
-                    item: .propertyAssignment(propertyName: $0.name, fromSource: sourceParamName)
-                )
+                CodeBlockItemSyntax.propertyAssignment(propertyName: $0.name, fromSource: sourceParamName)
             }
-            
         }
     )
 }
-
-private extension CodeBlockItemSyntax.Item {
-    static let superInit = CodeBlockItemSyntax.Item.expr(ExprSyntax(stringLiteral: "super.init()"))
-    
-    static func propertyAssignment(
-        propertyName: some SyntaxProtocol,
-        fromSource sourceName: TokenSyntax
-    ) -> CodeBlockItemSyntax.Item {
-        .expr(ExprSyntax(stringLiteral: "self.\(propertyName) = \(sourceName).\(propertyName)"))
-    }
-}
-

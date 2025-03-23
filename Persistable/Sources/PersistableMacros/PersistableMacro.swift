@@ -3,8 +3,6 @@ import SwiftSyntax
 import SwiftSyntaxBuilder
 import SwiftSyntaxMacros
 
-
-// TODO: Przenieść do innego pliku
 @main
 struct PersistablePlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
@@ -43,10 +41,7 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
             sourceParamName: .dao
         )
         
-        
-        // TODO: Generate member block
-        let memberBlockList = MemberBlockItemListSyntax(initializerMemberBlock)
-        let memberBlock = MemberBlockSyntax(members: memberBlockList)
+        let memberBlock = generateMemberBlock(with: initializerMemberBlock)
         
         let persistableExtension = ExtensionDeclSyntax(
             extendedType: type,
@@ -69,18 +64,19 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
         
         let variablesMemberBlock = generateVariableMemberBlock(from: persistableContext.properties)
         
+        let ovverideInitializerMemberBlock = generateOverrideInitializerMemberBlock(persistableContext: persistableContext)
+        
         let initializerMemberBlock = generateInitializerMemberBlock(
             persistableContext: persistableContext,
             sourceParamName: .model,
             includeSuperInit: true
         )
         
-        let memberBlockItems: [MemberBlockItemSyntax] = variablesMemberBlock + initializerMemberBlock
-        let memberBlockList = MemberBlockItemListSyntax(memberBlockItems)
-        let memberBlock = MemberBlockSyntax(members: memberBlockList)
+        let memberBlockItems: [MemberBlockItemSyntax] = variablesMemberBlock + overrideInitializerMemberBlock + initializerMemberBlock
+        let memberBlock = generateMemberBlock(with: memberBlockItems)
         
         let daoPersistenceClass = ClassDeclSyntax(
-            modifiers: .publicFinalModifiers, // aktualna + final
+            modifiers: persistableContext.structDecl.modifiers.withFinal,
             name: persistableContext.tokens.daoToken,
             inheritanceClause: persistableContext.inheritanceClause,
             memberBlock: memberBlock
@@ -89,8 +85,7 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
         return [.init(DeclSyntax(daoPersistenceClass))]
     }
     
-//    static func generateMemberBlock() -> MemberBlockSyntax {
-//        
-//    }
-    
+    private static func generateMemberBlock(with memberItems: [MemberBlockItemSyntax]) -> MemberBlockSyntax {
+        MemberBlockSyntax(members: MemberBlockItemListSyntax(memberItems))
+    }
 }

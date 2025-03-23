@@ -9,11 +9,11 @@ import Foundation
 import RealmSwift
 
 public protocol Persistable: Identifiable, Codable, Equatable, Hashable {
-//    associatedtype DAO: LocalDAO
-//    init(from model: DAO)
+    associatedtype DAO: LocalDAO
+    init(from model: DAO)
 }
 
 public protocol LocalDAO: Object {
-//    associatedtype Model: Persistable
-//    init(from dao: Model)
+    associatedtype Model: Persistable
+    init(from dao: Model)
 }
