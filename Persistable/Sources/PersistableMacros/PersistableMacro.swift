@@ -38,7 +38,23 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
             conformingTo: [.persistable]
         )
         
-        return []
+        let initializerMemberBlock = generateInitializerMemberBlock(
+            persistableContext: persistableContext,
+            sourceParamName: .dao
+        )
+        
+        
+        // TODO: Generate member block
+        let memberBlockList = MemberBlockItemListSyntax(initializerMemberBlock)
+        let memberBlock = MemberBlockSyntax(members: memberBlockList)
+        
+        let persistableExtension = ExtensionDeclSyntax(
+            extendedType: type,
+            inheritanceClause: persistableContext.inheritanceClause,
+            memberBlock: memberBlock
+        )
+        
+        return [persistableExtension]
     }
     
     public static func expansion(
@@ -51,7 +67,21 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
             conformingTo: [.realmObject, .localDAO]
         )
         
+        // TODO: Generate Variable
+        
+        
+        // Init
+        let initializerMemberBlock = generateInitializerMemberBlock(
+            persistableContext: persistableContext,
+            sourceParamName: .model,
+            includeSuperInit: true
+        )
+        
         return []
     }
+    
+//    static func generateMemberBlock() -> MemberBlockSyntax {
+//        
+//    }
     
 }

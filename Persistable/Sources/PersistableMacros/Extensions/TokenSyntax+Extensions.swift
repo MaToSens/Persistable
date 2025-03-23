@@ -8,10 +8,13 @@
 import SwiftSyntax
 
 extension TokenSyntax {
-    
     // Protocols
     static let persistable = identifier("Persistable")
     static let realmObject = identifier("Object")
     static let localDAO = identifier("LocalDAO")
         
+    // Init
+    static let from = identifier("from")
+    static let model = identifier("model")
+    static let dao = identifier("dao")
 }

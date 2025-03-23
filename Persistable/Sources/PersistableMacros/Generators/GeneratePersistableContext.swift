@@ -11,8 +11,14 @@ struct PersistableContext {
     let structDecl: StructDeclSyntax
     let properties: [Property]
     let inheritanceClause: InheritanceClauseSyntax
-    let structToken: TokenSyntax
-    let classToken: TokenSyntax
+    let tokens: PersistableTypeTokens
+}
+
+struct PersistableTypeTokens {
+    let entityToken: TokenSyntax
+    let entityType: TypeSyntax
+    let daoToken: TokenSyntax
+    let daoType: TypeSyntax
 }
 
 func generatePersistableContext(
@@ -24,26 +30,29 @@ func generatePersistableContext(
     }
     
     let properties = try extractProperties(from: structDecl)
-    let inheritanceClause = createInheritanceClause(with: protocols)
-    let (structToken, classToken) = createTypeTokens(for: structDecl.name.text)
+    let inheritanceClause = generateInheritanceClause(with: protocols)
+    let persistableTypeTokens = generateTypeTokens(for: structDecl.name.text)
     
     return PersistableContext(
         structDecl: structDecl,
         properties: properties,
         inheritanceClause: inheritanceClause,
-        structToken: structToken,
-        classToken: classToken
+        tokens: persistableTypeTokens
     )
 }
 
-private func createInheritanceClause(with protocols: [TokenSyntax]) -> InheritanceClauseSyntax {
+private func generateInheritanceClause(with protocols: [TokenSyntax]) -> InheritanceClauseSyntax {
     let inheritedTypes = protocols.map { InheritedTypeSyntax(type: IdentifierTypeSyntax(name: $0)) }
     return InheritanceClauseSyntax { inheritedTypes }
 }
 
-private func createTypeTokens(for typeName: String) -> (structToken: TokenSyntax, daoToken: TokenSyntax) {
-    (
-        TokenSyntax(stringLiteral: typeName),
-        TokenSyntax(stringLiteral: "\(typeName)DAO")
+private func generateTypeTokens(for typeName: String) -> PersistableTypeTokens {
+    let daoTypeName = "\(typeName)DAO"
+    
+    return PersistableTypeTokens(
+        entityToken: TokenSyntax(stringLiteral: typeName),
+        entityType: TypeSyntax(stringLiteral: typeName),
+        daoToken: TokenSyntax(stringLiteral: daoTypeName),
+        daoType: TypeSyntax(stringLiteral: daoTypeName)
     )
 }

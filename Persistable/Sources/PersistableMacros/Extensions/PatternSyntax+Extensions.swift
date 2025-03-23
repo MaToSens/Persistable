@@ -8,12 +8,7 @@
 import SwiftSyntax
 
 extension PatternSyntax {
-    
     var isIdProperty: Bool {
-        self
-            .as(IdentifierPatternSyntax.self)?
-            .identifier
-            .text == "id"
+        self.as(IdentifierPatternSyntax.self)?.identifier.text == "id"
     }
-    
 }
