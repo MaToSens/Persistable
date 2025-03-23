@@ -67,17 +67,26 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
             conformingTo: [.realmObject, .localDAO]
         )
         
-        // TODO: Generate Variable
+        let variablesMemberBlock = generateVariableMemberBlock(from: persistableContext.properties)
         
-        
-        // Init
         let initializerMemberBlock = generateInitializerMemberBlock(
             persistableContext: persistableContext,
             sourceParamName: .model,
             includeSuperInit: true
         )
         
-        return []
+        let memberBlockItems: [MemberBlockItemSyntax] = variablesMemberBlock + initializerMemberBlock
+        let memberBlockList = MemberBlockItemListSyntax(memberBlockItems)
+        let memberBlock = MemberBlockSyntax(members: memberBlockList)
+        
+        let daoPersistenceClass = ClassDeclSyntax(
+            modifiers: .publicFinalModifiers, // aktualna + final
+            name: persistableContext.tokens.daoToken,
+            inheritanceClause: persistableContext.inheritanceClause,
+            memberBlock: memberBlock
+        )
+        
+        return [.init(DeclSyntax(daoPersistenceClass))]
     }
     
 //    static func generateMemberBlock() -> MemberBlockSyntax {

@@ -17,4 +17,8 @@ extension TokenSyntax {
     static let from = identifier("from")
     static let model = identifier("model")
     static let dao = identifier("dao")
+    
+    // Attributes
+    static let persisted = identifier("Persisted")
+    static let persistedPrimaryKey = identifier("Persisted(primaryKey: true)")
 }
