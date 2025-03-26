@@ -36,12 +36,15 @@ public struct PersistableMacro: ExtensionMacro, PeerMacro {
             conformingTo: [.persistable]
         )
         
+        let staticCollectionMemberBlock = generateStaticCollectionMemberBlock(from: persistableContext.structDecl)
+        
         let initializerMemberBlock = generateInitializerMemberBlock(
             persistableContext: persistableContext,
             sourceParamName: .dao
         )
         
-        let memberBlock = generateMemberBlock(with: initializerMemberBlock)
+        let memberBlockItems: [MemberBlockItemSyntax] = staticCollectionMemberBlock + initializerMemberBlock
+        let memberBlock = generateMemberBlock(with: memberBlockItems)
         
         let persistableExtension = ExtensionDeclSyntax(
             extendedType: type,

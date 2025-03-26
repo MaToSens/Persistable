@@ -21,4 +21,8 @@ extension TokenSyntax {
     // Attributes
     static let persisted = identifier("Persisted")
     static let persistedPrimaryKey = identifier("Persisted(primaryKey: true)")
+    
+    // Static
+    static let collection =  identifier("collection")
+    static let string = identifier("String")
 }

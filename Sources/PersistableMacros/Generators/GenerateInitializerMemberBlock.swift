@@ -30,7 +30,7 @@ func generateInitializerMemberBlock(
     )
     
     let initDecl = InitializerDeclSyntax(
-        modifiers: persistableContext.structDecl.modifiers,
+        modifiers: .publicModifier,
         signature: signature,
         body: body
     )
