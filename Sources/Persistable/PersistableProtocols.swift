@@ -8,7 +8,7 @@
 import Foundation
 import RealmSwift
 
-public protocol Persistable: Identifiable, Codable, Equatable, Hashable {
+public protocol Persistable: Identifiable, Codable, Equatable, Hashable, Sendable {
     static var collection: String { get }
     
     associatedtype DAO: LocalDAO
